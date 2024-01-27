@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Bad
   m_EditorClassIdentifier: 
   plantType: 1
-  plantSprite: {fileID: 21300000, guid: 9d0b702e2bae1fe42aa6a01581b864d2, type: 3}
+  plantSprite: {fileID: 21300000, guid: 166b778bf0e45f94d987ab29c5eabf9e, type: 3}

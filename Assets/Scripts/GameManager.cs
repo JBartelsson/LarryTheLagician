@@ -11,6 +11,18 @@ public enum Room
     Throne,
     None
 }
+public enum ActionToListen
+{
+    performed1,
+    performed2,
+    performed3
+}
+public enum GameState
+{
+    King,
+    Free,
+    Pause
+}
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
@@ -18,6 +30,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<RoomType> rooms;
 
     private Room currentRoom = Room.Sleep;
+    private GameState currentGameState = GameState.King;
+    private int actionsLeft = 0;
+    private float dayEndDelay = 0.5f;
+
+    public bool CanDoAction { get
+        {
+            return actionsLeft > 0;
+        } }
 
     [Serializable]
     public class RoomType
@@ -32,6 +52,8 @@ public class GameManager : MonoBehaviour
     
 
     public event EventHandler<Room> OnRoomChanged;
+    public event EventHandler<GameState> OnGameStateChanged;
+    public event EventHandler<ActionToListen> OnPerform;
 
     private void Awake()
     {
@@ -41,8 +63,29 @@ public class GameManager : MonoBehaviour
     {
         gameInput.OnUp += GameInput_OnUp;
         gameInput.OnDown += GameInput_OnDown;
+        gameInput.OnInteract1 += GameInput_OnInteract1;
+        gameInput.OnInteract2 += GameInput_OnInteract2;
+        gameInput.OnInteract3 += GameInput_OnInteract3;
 
         OnRoomChanged?.Invoke(this, currentRoom);
+
+        GiveActions(1);
+    }
+
+    private void GameInput_OnInteract3(object sender, EventArgs e)
+    {
+        OnPerform?.Invoke(this, ActionToListen.performed3);
+    }
+
+    private void GameInput_OnInteract2(object sender, EventArgs e)
+    {
+        OnPerform?.Invoke(this, ActionToListen.performed2);
+
+    }
+
+    private void GameInput_OnInteract1(object sender, EventArgs e)
+    {
+        OnPerform?.Invoke(this, ActionToListen.performed1);
     }
 
     private void GameInput_OnDown(object sender, EventArgs e)
@@ -68,6 +111,33 @@ public class GameManager : MonoBehaviour
     public void ChangeRoom(Room room)
     {
         currentRoom = room;
+    }
+
+    public void RegisterAction()
+    {
+        if (actionsLeft > 0)
+        actionsLeft--;
+        if (actionsLeft == 0)
+        {
+            Invoke(nameof(EndDay), dayEndDelay);
+        }
+
+    }
+
+    public void EndDay()
+    {
+        ChangeGameState(GameState.King);
+    }
+
+    public void ChangeGameState(GameState newGameState)
+    {
+        currentGameState = newGameState;
+        OnGameStateChanged?.Invoke(this, currentGameState);
+    }
+
+    public void GiveActions(int actions)
+    {
+        actionsLeft = actions;
     }
 
 }

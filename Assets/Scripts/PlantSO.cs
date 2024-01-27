@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 [CreateAssetMenu]
-public class Plant : ScriptableObject
+public class PlantSO : ScriptableObject
 {
     public enum PlantTypes
     {

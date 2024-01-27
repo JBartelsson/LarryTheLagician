@@ -177,6 +177,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4946011289136203184}
+  - component: {fileID: 1467501861279390137}
+  - component: {fileID: 4998593218730099820}
   m_Layer: 0
   m_Name: Plant
   m_TagString: Untagged
@@ -201,3 +203,35 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1467501861279390137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5246968400574533644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 738b9054c5b46b6419246b23da58e260, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionToListen: 0
+  plantSprite: {fileID: 3705823497080627238}
+  plantUI: {fileID: 0}
+  plantSOList:
+  - {fileID: 11400000, guid: 41c16d36d0751824fb63451ea106fa15, type: 2}
+  - {fileID: 11400000, guid: 5114c786c461a684e9ea8512ce195246, type: 2}
+--- !u!114 &4998593218730099820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5246968400574533644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 671c16e4d4dd1ac429078484606e370d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scriptToDisable: {fileID: 1467501861279390137}
+  room: 2
