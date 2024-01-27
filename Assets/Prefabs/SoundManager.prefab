@@ -179,7 +179,11 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 46e1baea5d8e5494d8fa0825e9cabffc, type: 3}
   - name: PlottingMusic
     clip: {fileID: 8300000, guid: 1fe8420150a54a546b719b52a7e1ae08, type: 3}
-  sfxSounds: []
+  sfxSounds:
+  - name: LoryWalk
+    clip: {fileID: 8300000, guid: 755124375690d1643a7e5370c248d238, type: 3}
+  - name: PotionProduce
+    clip: {fileID: 8300000, guid: ab5cd1340992f2748a6a94a94a20ed3c, type: 3}
   musicSource: {fileID: 7096373759645860231}
   sfxSource: {fileID: 3273970177948791011}
 --- !u!1 &4938705606332520229
