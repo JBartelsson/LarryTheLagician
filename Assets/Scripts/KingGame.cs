@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using UnityEngine.UI;
 
 public class KingGame : MonoBehaviour
 {
-    [SerializeField] private GameObject minigameObject;
+    [SerializeField] private CanvasGroup minigameObject;
     bool active = false;
     bool minigameActive = true;
     [SerializeField] float goodPercent;
@@ -16,6 +17,7 @@ public class KingGame : MonoBehaviour
     [SerializeField] Image perfectImage;
     [SerializeField] Image rotationObject;
     [SerializeField] private float speed = 2f;
+    float fadeDuration = 0.5f;
 
     private void Start()
     {
@@ -38,8 +40,10 @@ public class KingGame : MonoBehaviour
 
     private void HitSkillCheck()
     {
+        minigameActive = false;
         float angle = Vector2.Angle(-rotationObject.transform.up, Vector2.down);
         float percent = angle / 360 * 100;
+        EndKingGame();
         if (percent < goodPercent)
         {
             if (percent < perfectPercent)
@@ -55,8 +59,12 @@ public class KingGame : MonoBehaviour
                 Debug.Log("Good");
 
             }
+        } else
+        {
+            GameManager.Instance.LivesLeft--;
+            GameManager.Instance.GiveActions(1);
+
         }
-        EndKingGame();
     }
 
     private void EndKingGame()
@@ -64,7 +72,7 @@ public class KingGame : MonoBehaviour
         Debug.Log("End King Game");
         active = false;
         GameManager.Instance.ChangeGameState(GameState.Free);
-        minigameObject.SetActive(false);
+        minigameObject.DOFade(0f, fadeDuration);
     }
 
     public void StartKingGame()
@@ -72,7 +80,8 @@ public class KingGame : MonoBehaviour
         active = true;
         minigameActive = true;
 
-        minigameObject.SetActive(true);
+        minigameObject.DOFade(1f, fadeDuration);
+
     }
 
     private void Update()

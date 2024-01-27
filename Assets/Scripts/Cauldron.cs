@@ -12,7 +12,7 @@ public class Cauldron : RoomObject
 
     private void Instance_OnPerform(object sender, ActionToListen e)
     {
-        if (!GameManager.Instance.CanDoAction) return;
+        if (!GameManager.Instance.canDoAction) return;
         if (!objectEnabled) return;
         GameManager.Instance.AddItemToInventory(itemToGive);
         GameManager.Instance.RegisterAction();

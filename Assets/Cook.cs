@@ -12,7 +12,7 @@ public class Cook : RoomObject
 
     private void Instance_OnPerform(object sender, ActionToListen e)
     {
-        if (!GameManager.Instance.CanDoAction) return;
+        if (!GameManager.Instance.canDoAction) return;
         if (!objectEnabled) return;
         if (GameManager.Instance.Inventory.Any((x) => x.itemtype == Item.DeadlyPotion))
         {

@@ -21,7 +21,8 @@ public enum GameState
 {
     King,
     Free,
-    Pause
+    Pause,
+    Gamover
 }
 public class GameManager : MonoBehaviour
 {
@@ -30,22 +31,30 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<RoomType> rooms;
     [SerializeField] private KingGame kingGame;
 
-    private Room currentRoom = Room.Sleep;
+    private Room currentRoom = Room.None;
     private GameState currentGameState = GameState.King;
     private int actionsLeft = 0;
     private float dayEndDelay = 0.5f;
+    private int livesLeft = 2;
 
     //King stats
     public bool kingKillable = false;
 
     private List<ItemSO> inventory = new();
 
-    public bool CanDoAction { get
-        {
-            return actionsLeft > 0;
-        } }
+    public bool canDoAction = true;
 
     public List<ItemSO> Inventory { get => inventory; set => inventory = value; }
+    public int LivesLeft { get => livesLeft; set {
+            livesLeft = value;
+            if (livesLeft == 0)
+            {
+                ChangeGameState(GameState.Gamover);
+            }
+        }
+    }
+
+   
 
     [Serializable]
     public class RoomType
@@ -57,9 +66,15 @@ public class GameManager : MonoBehaviour
         public Room bottomRoom;
     }
 
+    public class RoomChange
+    {
+        public Room newRoom;
+        public Room oldRoom;
+    }
+
     
 
-    public event EventHandler<Room> OnRoomChanged;
+    public event EventHandler<RoomChange> OnRoomChanged;
     public event EventHandler<GameState> OnGameStateChanged;
     public event EventHandler<ActionToListen> OnPerform;
     public event EventHandler OnDayEnd;
@@ -77,7 +92,7 @@ public class GameManager : MonoBehaviour
         gameInput.OnInteract2 += GameInput_OnInteract2;
         gameInput.OnInteract3 += GameInput_OnInteract3;
 
-        ChangeRoom(Room.Sleep);
+        ChangeRoom(Room.Throne);
         ChangeGameState(GameState.King);
         OnInventoryUpdated?.Invoke(this, inventory);
     }
@@ -100,6 +115,7 @@ public class GameManager : MonoBehaviour
 
     private void GameInput_OnDown(object sender, EventArgs e)
     {
+        if (!canDoAction) return;
         if (currentGameState == GameState.King) return;
         Room newRoom = rooms.First((x) => x.roomType == currentRoom).bottomRoom;
         if (newRoom != Room.None)
@@ -110,6 +126,7 @@ public class GameManager : MonoBehaviour
 
     private void GameInput_OnUp(object sender, System.EventArgs e)
     {
+        if (!canDoAction) return;
         if (currentGameState == GameState.King) return;
         Room newRoom = rooms.First((x) => x.roomType == currentRoom).upRoom;
         if (newRoom != Room.None)
@@ -120,8 +137,8 @@ public class GameManager : MonoBehaviour
 
     public void ChangeRoom(Room newRoom)
     {
+        OnRoomChanged?.Invoke(this, new RoomChange { newRoom = newRoom, oldRoom = currentRoom });
         currentRoom = newRoom;
-        OnRoomChanged?.Invoke(this, currentRoom);
 
     }
 
@@ -131,8 +148,21 @@ public class GameManager : MonoBehaviour
         actionsLeft--;
         if (actionsLeft == 0)
         {
+            canDoAction = false;
             Invoke(nameof(EndDay), dayEndDelay);
         }
+
+    }
+
+    public void EnableActions()
+    {
+        canDoAction = false;
+
+    }
+
+    public void DisableActions()
+    {
+        canDoAction = true;
 
     }
 
@@ -159,16 +189,28 @@ public class GameManager : MonoBehaviour
                 item.ChangeVisibility(false);
             }
             kingGame.StartKingGame();
-            currentRoom = Room.Throne;
+            ChangeRoom(Room.Throne);
+
             AudioManager.Instance.PlayMusic("ThroneMusic");
         }
 
         if (currentGameState == GameState.Free)
         {
+            canDoAction = true;
             OnDayEnd?.Invoke(this, EventArgs.Empty);
-            ChangeRoom(Room.Sleep);
+            ChangeRoom(Room.Throne);
             AudioManager.Instance.PlayMusic("PlottingMusic");
 
+        }
+
+        if (currentGameState == GameState.Gamover)
+        {
+            Debug.Log("GameOver");
+            foreach (var item in GameObject.FindObjectsByType<RoomObject>(FindObjectsSortMode.None).ToList())
+            {
+                item.HoverObject(false);
+                item.ChangeVisibility(false);
+            }
         }
     }
 

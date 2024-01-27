@@ -13,9 +13,9 @@ public class RoomListener : MonoBehaviour
         GameManager.Instance.OnRoomChanged += Instance_OnRoomChanged;
     }
 
-    private void Instance_OnRoomChanged(object sender, Room e)
+    private void Instance_OnRoomChanged(object sender, GameManager.RoomChange e)
     {
-        if ( e == roomToListen)
+        if ( e.newRoom == roomToListen)
         {
             Debug.Log($"{name} set Active");
             gameObjectToShow.SetActive(true);

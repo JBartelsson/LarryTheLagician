@@ -40,7 +40,7 @@ public class PlantScript : RoomObject
 
     public void ChoosePlant()
     {
-        if (!GameManager.Instance.CanDoAction) return;
+        if (!GameManager.Instance.canDoAction) return;
         //plantUI.SetActive(false);
         if (objectEnabled && !activeObject)
         {

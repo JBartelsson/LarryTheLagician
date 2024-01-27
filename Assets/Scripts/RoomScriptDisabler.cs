@@ -13,9 +13,9 @@ public class RoomScriptDisabler : MonoBehaviour
         GameManager.Instance.OnRoomChanged += Instance_OnRoomChanged;
     }
 
-    private void Instance_OnRoomChanged(object sender, Room e)
+    private void Instance_OnRoomChanged(object sender, GameManager.RoomChange e)
     {
-        if (room != e)
+        if (room != e.newRoom)
         {
             roomObjectsToManage.ForEach((x) =>
             {
