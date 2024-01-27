@@ -7,7 +7,7 @@ public class PlantScript : RoomObject
    
     [SerializeField] ActionToListen actionToListen;
     [SerializeField] SpriteRenderer plantSprite;
-    [SerializeField] GameObject plantUI;
+    [SerializeField] GameObject activeMarker;
     [SerializeField] List<PlantSO> plantSOList;
     PlantSO currentPlant;
     bool clickedThisFrame = false;
@@ -30,6 +30,8 @@ public class PlantScript : RoomObject
 
     private void Perform1(object sender, ActionToListen e)
     {
+        Debug.Log($"{name} plant listened to Perform");
+        if (!objectEnabled) return;
         if (e == actionToListen)
         ChoosePlant();
     }
@@ -84,4 +86,9 @@ public class PlantScript : RoomObject
         currentPlant = null;
     }
 
+    public override void HoverObject(bool active)
+    {
+        base.HoverObject(active);
+        activeMarker.SetActive(active);
+    }
 }

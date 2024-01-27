@@ -31,14 +31,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] private KingGame kingGame;
 
     private Room currentRoom = Room.Sleep;
-    private GameState currentGameState = GameState.Free;
+    private GameState currentGameState = GameState.King;
     private int actionsLeft = 0;
     private float dayEndDelay = 0.5f;
+
+    //King stats
+    public bool kingKillable = false;
+
+    private List<ItemSO> inventory = new();
 
     public bool CanDoAction { get
         {
             return actionsLeft > 0;
         } }
+
+    public List<ItemSO> Inventory { get => inventory; set => inventory = value; }
 
     [Serializable]
     public class RoomType
@@ -56,6 +63,7 @@ public class GameManager : MonoBehaviour
     public event EventHandler<GameState> OnGameStateChanged;
     public event EventHandler<ActionToListen> OnPerform;
     public event EventHandler OnDayEnd;
+    public event EventHandler<List<ItemSO>> OnInventoryUpdated;
 
     private void Awake()
     {
@@ -69,9 +77,9 @@ public class GameManager : MonoBehaviour
         gameInput.OnInteract2 += GameInput_OnInteract2;
         gameInput.OnInteract3 += GameInput_OnInteract3;
 
-        OnRoomChanged?.Invoke(this, currentRoom);
-
-        GiveActions(1);
+        ChangeRoom(Room.Sleep);
+        ChangeGameState(GameState.King);
+        OnInventoryUpdated?.Invoke(this, inventory);
     }
 
     private void GameInput_OnInteract3(object sender, EventArgs e)
@@ -140,6 +148,11 @@ public class GameManager : MonoBehaviour
 
         if (currentGameState == GameState.King)
         {
+            if (kingKillable)
+            {
+                Debug.Log("You win");
+                return;
+            }
             foreach (var item in GameObject.FindObjectsByType<RoomObject>(FindObjectsSortMode.None).ToList())
             {
                 item.HoverObject(false);
@@ -147,18 +160,35 @@ public class GameManager : MonoBehaviour
             }
             kingGame.StartKingGame();
             currentRoom = Room.Throne;
+            AudioManager.Instance.PlayMusic("ThroneMusic");
         }
 
         if (currentGameState == GameState.Free)
         {
             OnDayEnd?.Invoke(this, EventArgs.Empty);
-            ChangeRoom(Room.Plant);
+            ChangeRoom(Room.Sleep);
+            AudioManager.Instance.PlayMusic("PlottingMusic");
+
         }
     }
 
     public void GiveActions(int actions)
     {
         actionsLeft = actions;
+    }
+
+    public void AddItemToInventory(ItemSO item)
+    {
+        inventory.Add(item);
+        OnInventoryUpdated?.Invoke(this, inventory);
+        Debug.Log("Added item");
+    }
+
+    public void RemoveItemFromInventory(ItemSO item)
+    {
+        inventory.RemoveAll((x) => x.itemtype == item.itemtype);
+        OnInventoryUpdated?.Invoke(this, inventory);
+
     }
 
 }

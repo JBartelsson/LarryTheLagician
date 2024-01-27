@@ -17,11 +17,11 @@ public class RoomListener : MonoBehaviour
     {
         if ( e == roomToListen)
         {
+            Debug.Log($"{name} set Active");
             gameObjectToShow.SetActive(true);
         } else
         {
             gameObjectToShow.SetActive(false);
-
 
         }
     } 

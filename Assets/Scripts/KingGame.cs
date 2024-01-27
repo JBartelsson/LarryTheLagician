@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class KingGame : MonoBehaviour
 {
-    [SerializeField] private GameObject kingGameObject;
+    [SerializeField] private GameObject minigameObject;
     bool active = false;
     bool minigameActive = true;
     [SerializeField] float goodPercent;
@@ -45,10 +45,13 @@ public class KingGame : MonoBehaviour
             if (percent < perfectPercent)
             {
                 Debug.Log("perfect");
+                GameManager.Instance.GiveActions(2);
 
             }
             else
             {
+                GameManager.Instance.GiveActions(1);
+
                 Debug.Log("Good");
 
             }
@@ -61,8 +64,7 @@ public class KingGame : MonoBehaviour
         Debug.Log("End King Game");
         active = false;
         GameManager.Instance.ChangeGameState(GameState.Free);
-        GameManager.Instance.GiveActions(2);
-        kingGameObject.SetActive(false);
+        minigameObject.SetActive(false);
     }
 
     public void StartKingGame()
@@ -70,7 +72,7 @@ public class KingGame : MonoBehaviour
         active = true;
         minigameActive = true;
 
-        kingGameObject.SetActive(true);
+        minigameObject.SetActive(true);
     }
 
     private void Update()
