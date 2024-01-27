@@ -28,9 +28,10 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
     [SerializeField] private GameInput gameInput;
     [SerializeField] private List<RoomType> rooms;
+    [SerializeField] private KingGame kingGame;
 
     private Room currentRoom = Room.Sleep;
-    private GameState currentGameState = GameState.King;
+    private GameState currentGameState = GameState.Free;
     private int actionsLeft = 0;
     private float dayEndDelay = 0.5f;
 
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
     public event EventHandler<Room> OnRoomChanged;
     public event EventHandler<GameState> OnGameStateChanged;
     public event EventHandler<ActionToListen> OnPerform;
+    public event EventHandler OnDayEnd;
 
     private void Awake()
     {
@@ -90,27 +92,29 @@ public class GameManager : MonoBehaviour
 
     private void GameInput_OnDown(object sender, EventArgs e)
     {
+        if (currentGameState == GameState.King) return;
         Room newRoom = rooms.First((x) => x.roomType == currentRoom).bottomRoom;
         if (newRoom != Room.None)
         {
-            currentRoom = newRoom;
-            OnRoomChanged?.Invoke(this, currentRoom);
+            ChangeRoom(newRoom);
         }
     }
 
     private void GameInput_OnUp(object sender, System.EventArgs e)
     {
+        if (currentGameState == GameState.King) return;
         Room newRoom = rooms.First((x) => x.roomType == currentRoom).upRoom;
         if (newRoom != Room.None)
         {
-            currentRoom = newRoom;
-            OnRoomChanged?.Invoke(this, currentRoom);
+            ChangeRoom(newRoom);
         }
     }
 
-    public void ChangeRoom(Room room)
+    public void ChangeRoom(Room newRoom)
     {
-        currentRoom = room;
+        currentRoom = newRoom;
+        OnRoomChanged?.Invoke(this, currentRoom);
+
     }
 
     public void RegisterAction()
@@ -133,6 +137,22 @@ public class GameManager : MonoBehaviour
     {
         currentGameState = newGameState;
         OnGameStateChanged?.Invoke(this, currentGameState);
+
+        if (currentGameState == GameState.King)
+        {
+            foreach (var item in GameObject.FindObjectsByType<RoomObject>(FindObjectsSortMode.None).ToList())
+            {
+                item.HoverObject(false);
+                item.ChangeVisibility(false);
+            }
+            kingGame.StartKingGame();
+            currentRoom = Room.Throne;
+        }
+
+        if (currentGameState == GameState.Free)
+        {
+            ChangeRoom(Room.Plant);
+        }
     }
 
     public void GiveActions(int actions)
