@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -57,5 +58,14 @@ public class AudioManager : MonoBehaviour
         {
             sfxSource.PlayOneShot(s.clip);
         }
+    }
+
+    public void StopSFX()
+    {
+        sfxSource.DOFade(0, .3f).OnComplete(() =>
+        {
+            sfxSource.Stop();
+            sfxSource.volume = 1f;
+        });
     }
 }

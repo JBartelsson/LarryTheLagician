@@ -7,7 +7,7 @@ public class RoomListener : MonoBehaviour
 {
     // Start is called before the first frame update
     public Room roomToListen;
-    [SerializeField] private GameObject gameObjectToShow;
+    [SerializeField] private List<GameObject> gameObjectToShow;
     void Start()
     {
         GameManager.Instance.OnRoomChanged += Instance_OnRoomChanged;
@@ -18,10 +18,11 @@ public class RoomListener : MonoBehaviour
         if ( e.newRoom == roomToListen)
         {
             Debug.Log($"{name} set Active");
-            gameObjectToShow.SetActive(true);
+            gameObjectToShow.ForEach((x) => x.SetActive(true));
         } else
         {
-            gameObjectToShow.SetActive(false);
+            gameObjectToShow.ForEach((x) => x.SetActive(false));
+
 
         }
     } 

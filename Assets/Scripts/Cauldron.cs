@@ -14,6 +14,8 @@ public class Cauldron : RoomObject
     {
         if (!GameManager.Instance.canDoAction) return;
         if (!objectEnabled) return;
+        AudioManager.Instance.PlaySFX("PotionProduce");
+
         GameManager.Instance.AddItemToInventory(itemToGive);
         GameManager.Instance.RegisterAction();
 
