@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,10 +9,13 @@ public class KingGame : MonoBehaviour
 {
     [SerializeField] private GameObject kingGameObject;
     bool active = false;
+    bool minigameActive = true;
     [SerializeField] float goodPercent;
     [SerializeField] float perfectPercent;
     [SerializeField] Image goodImage;
     [SerializeField] Image perfectImage;
+    [SerializeField] Image rotationObject;
+    [SerializeField] private float speed = 2f;
 
     private void Start()
     {
@@ -30,8 +34,25 @@ public class KingGame : MonoBehaviour
         }
     }
 
+    
+
     private void HitSkillCheck()
     {
+        float angle = Vector2.Angle(-rotationObject.transform.up, Vector2.down);
+        float percent = angle / 360 * 100;
+        if (percent < goodPercent)
+        {
+            if (percent < perfectPercent)
+            {
+                Debug.Log("perfect");
+
+            }
+            else
+            {
+                Debug.Log("Good");
+
+            }
+        }
         EndKingGame();
     }
 
@@ -47,11 +68,16 @@ public class KingGame : MonoBehaviour
     public void StartKingGame()
     {
         active = true;
+        minigameActive = true;
+
         kingGameObject.SetActive(true);
     }
 
     private void Update()
     {
-        
+        if (minigameActive)
+        {
+            rotationObject.transform.Rotate(new Vector3(0, 0, Time.deltaTime * speed));
+        }
     }
 }

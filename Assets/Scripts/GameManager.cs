@@ -151,6 +151,7 @@ public class GameManager : MonoBehaviour
 
         if (currentGameState == GameState.Free)
         {
+            OnDayEnd?.Invoke(this, EventArgs.Empty);
             ChangeRoom(Room.Plant);
         }
     }

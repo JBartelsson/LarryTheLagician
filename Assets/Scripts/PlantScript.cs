@@ -18,8 +18,14 @@ public class PlantScript : RoomObject
         SetPlant(false);
         GameManager.Instance.OnPerform += OnPerformchoose;
         GameManager.Instance.OnPerform += Perform1;
+        GameManager.Instance.OnDayEnd += Instance_OnDayEnd;
 
 
+    }
+
+    private void Instance_OnDayEnd(object sender, System.EventArgs e)
+    {
+        Harvest();
     }
 
     private void Perform1(object sender, ActionToListen e)
@@ -49,11 +55,14 @@ public class PlantScript : RoomObject
         if (!activeObject) return;
         if (e == ActionToListen.performed1)
         {
+            Debug.Log("Planted Happy");
             SetPlant(true, plantSOList[0]);
 
         }
         if (e == ActionToListen.performed2)
         {
+            Debug.Log("Planted Dead");
+
             SetPlant(true, plantSOList[1]);
 
         }
@@ -61,13 +70,18 @@ public class PlantScript : RoomObject
 
     void SetPlant(bool active, PlantSO plantToPlant = null)
     {
-        if (currentPlant != null) return;
         plantSprite.gameObject.SetActive(active);
         if (plantToPlant == null) return;
         currentPlant = plantToPlant;
         GameManager.Instance.RegisterAction();
         if (active)
         plantSprite.sprite = plantToPlant.PlantSprite;
+    }
+
+    void Harvest()
+    {
+        SetPlant(false);
+        currentPlant = null;
     }
 
 }
