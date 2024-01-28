@@ -179,6 +179,8 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: 46e1baea5d8e5494d8fa0825e9cabffc, type: 3}
   - name: PlottingMusic
     clip: {fileID: 8300000, guid: 1fe8420150a54a546b719b52a7e1ae08, type: 3}
+  - name: MainMusic
+    clip: {fileID: 8300000, guid: e35a7990c97317e4395d14e75536779e, type: 3}
   sfxSounds:
   - name: LoryWalk
     clip: {fileID: 8300000, guid: 755124375690d1643a7e5370c248d238, type: 3}
