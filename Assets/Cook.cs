@@ -37,8 +37,14 @@ public class Cook : RoomObject
 
     private void Instance_OnPerform(object sender, ActionToListen e)
     {
-        if (!GameManager.Instance.canDoAction) return;
+        if (!GameManager.Instance.canDoAction)
+        {
+            AudioManager.Instance.PlaySFX("NoActionLeft");
+
+            return;
+        }
         if (!objectEnabled) return;
+        AudioManager.Instance.PlaySFX("ButtonClick");
 
         if (friendlevel < 3)
         {

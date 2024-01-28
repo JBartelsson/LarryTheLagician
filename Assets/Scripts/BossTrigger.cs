@@ -21,7 +21,9 @@ public class BossTrigger : RoomObject
     private void Instance_OnPerform(object sender, ActionToListen e)
     {
         if (!objectEnabled) return;
-        if (GameManager.Instance.currentGameState != GameState.King)
+        if (GameManager.Instance.currentGameState == GameState.King) return;
+            AudioManager.Instance.PlaySFX("ButtonClick");
+
         GameManager.Instance.ChangeGameState(GameState.King);
         
 
