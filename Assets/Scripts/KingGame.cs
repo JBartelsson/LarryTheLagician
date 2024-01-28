@@ -26,6 +26,11 @@ public class KingGame : MonoBehaviour
     [SerializeField] Image perfectImage;
     [SerializeField] Image rotationObject;
     [SerializeField] private float speed = 2f;
+
+    public Sprite kingnormal;
+    public Sprite kinghappy;
+    public Sprite kingextrahappy;
+    public SpriteRenderer king;
     float fadeDuration = 0.5f;
 
     public void Start()
@@ -75,14 +80,20 @@ public class KingGame : MonoBehaviour
                 GameManager.Instance.UIAnimateObject(actionsGroup, durationWait);
 
                 GameManager.Instance.GiveActions(2);
+                king.sprite = kingextrahappy;
+                AudioManager.Instance.PlaySFX("KingLaughingHard");
+
 
             }
             else
             {
                 GameManager.Instance.GiveActions(1);
+                king.sprite = kinghappy;
+
                 actionsText.text = "+1";
                 GameManager.Instance.UIAnimateObject(goodText);
                 GameManager.Instance.UIAnimateObject(actionsGroup, durationWait);
+                AudioManager.Instance.PlaySFX("KingLaughingMedium");
 
                 Debug.Log("Good");
 
@@ -93,8 +104,17 @@ public class KingGame : MonoBehaviour
             GameManager.Instance.UIAnimateObject(lifesGroup, durationWait);
             GameManager.Instance.LivesLeft--;
             GameManager.Instance.GiveActions(1);
+            AudioManager.Instance.PlaySFX("KingNotAmused");
+
+
 
         }
+        Invoke(nameof(sprite), 2f);
+    }
+
+    private void sprite()
+    {
+        king.sprite = kingnormal;
     }
 
     private void EndKingGame()
@@ -110,6 +130,7 @@ public class KingGame : MonoBehaviour
 
     public void StartKingGame()
     {
+        king.sprite = kingnormal;
         active = true;
         minigameActive = true;
         otherParts.SetActive(true);

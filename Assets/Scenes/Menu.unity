@@ -1443,8 +1443,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: LORY
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8abee0da696010a48b4ef22377470f0e, type: 2}
-  m_sharedMaterial: {fileID: 3764883657265673856, guid: 8abee0da696010a48b4ef22377470f0e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 944f3d866e8070f4c99d58ef5c98e2a5, type: 2}
+  m_sharedMaterial: {fileID: 6841431965162968340, guid: 944f3d866e8070f4c99d58ef5c98e2a5, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

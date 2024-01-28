@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 public enum Room
 {
     Kitchen,
@@ -188,7 +190,9 @@ public class GameManager : MonoBehaviour
         {
             if (kingKillable)
             {
-                Debug.Log("You win");
+                AudioManager.Instance.PlaySFX("Drinking");
+                SceneManager.LoadScene("Win");
+
                 return;
             }
             foreach (var item in GameObject.FindObjectsByType<RoomObject>(FindObjectsSortMode.None).ToList())
@@ -217,6 +221,8 @@ public class GameManager : MonoBehaviour
         if (currentGameState == GameState.Gamover)
         {
             Debug.Log("GameOver");
+            SceneManager.LoadScene("GameOver");
+
             foreach (var item in GameObject.FindObjectsByType<RoomObject>(FindObjectsSortMode.None).ToList())
             {
                 item.HoverObject(false);
