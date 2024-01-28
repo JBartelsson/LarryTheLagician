@@ -14,7 +14,7 @@ public class PlayMusic : MonoBehaviour
 
         if (activeScene == "GameOver")
         {
-            AudioManager.Instance.PlayMusic("MainMusic");
+            AudioManager.Instance.PlaySFX("LoseMusic");
         }
         
         if (activeScene == "Credits")
@@ -31,7 +31,7 @@ public class PlayMusic : MonoBehaviour
         }
         if (activeScene == "Win")
         {
-            AudioManager.Instance.PlayMusic("MainMusic");
+            AudioManager.Instance.PlaySFX("WinMusic");
         }
     }
 
