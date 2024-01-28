@@ -25,5 +25,12 @@ public class MenuController : MonoBehaviour
    public void CreditsBack()
    {
     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex -2);
+   } 
+   
+   public void GetToMenu()
+   {
+     SceneManager.LoadScene("Menu");
    }
+
+   
 }
