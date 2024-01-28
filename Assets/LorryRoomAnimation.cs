@@ -73,7 +73,7 @@ public class LorryRoomAnimation : MonoBehaviour
 
     public void MovePlayer(Transform stairPoint1, Transform stairPoint2, Transform standingPoint1, bool facing1, bool facing2)
     {
-        GameManager.Instance.canDoAction = false;
+        GameManager.Instance.canDoMove = false;
         animator.SetBool("facingLeft", !facing1);
         animator.SetBool("walking", true);
         AudioManager.Instance.PlaySFX("LoryWalk");
@@ -86,7 +86,7 @@ public class LorryRoomAnimation : MonoBehaviour
                 lorryImage.DOFade(1f, lorryFade).OnComplete(() =>
                 {
                     lorry.DOMove(standingPoint1.position, speed).OnComplete(() =>{
-                        GameManager.Instance.canDoAction = true;
+                        GameManager.Instance.canDoMove = true;
                         AudioManager.Instance.StopSFX();
 
                         animator.SetBool("walking", false);

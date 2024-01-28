@@ -8,10 +8,16 @@ public class Cook : RoomObject
 {
     public Transform point1;
     public Transform point2;
+    int friendlevel;
+    public CanvasGroup heart;
+    public GameObject potionIcon;
 
     SpriteRenderer sprite;
     private void Start()
     {
+        heart.gameObject.SetActive(false);
+        potionIcon.gameObject.SetActive(false);
+
         sprite = GetComponent<SpriteRenderer>();
         transform.position = point1.position;
         GameManager.Instance.OnPerform += Instance_OnPerform;
@@ -33,12 +39,29 @@ public class Cook : RoomObject
     {
         if (!GameManager.Instance.canDoAction) return;
         if (!objectEnabled) return;
-        if (GameManager.Instance.Inventory.Any((x) => x.itemtype == Item.DeadlyPotion))
+
+        if (friendlevel < 3)
         {
-            Debug.Log("King is killable");
-            GameManager.Instance.kingKillable = true;
+            friendlevel++;
+            heart.GetComponent<RectTransform>().localPosition = new Vector2(0, 0);
+            GameManager.Instance.UIAnimateObject(heart, 0f, true);
             GameManager.Instance.RegisterAction();
+            if (friendlevel == 3)
+            {
+                potionIcon.gameObject.SetActive(true);
+            }
         }
+        else
+        {
+            if (GameManager.Instance.Inventory.Any((x) => x.itemtype == Item.DeadlyPotion))
+            {
+                Debug.Log("King is killable");
+                GameManager.Instance.kingKillable = true;
+                GameManager.Instance.RegisterAction();
+            }
+        }
+
+        
 
     }
 }

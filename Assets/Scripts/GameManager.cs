@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
     private List<ItemSO> inventory = new();
 
     public bool canDoAction = true;
+    public bool canDoMove = true;
 
     public List<ItemSO> Inventory { get => inventory; set => inventory = value; }
     public int LivesLeft { get => livesLeft; set {
@@ -99,7 +100,6 @@ public class GameManager : MonoBehaviour
         gameInput.OnInteract1 += GameInput_OnInteract1;
         gameInput.OnInteract2 += GameInput_OnInteract2;
         gameInput.OnInteract3 += GameInput_OnInteract3;
-        GiveActions(0);
         ChangeRoom(Room.Throne);
         ChangeGameState(GameState.King);
         OnInventoryUpdated?.Invoke(this, inventory);
@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour
 
     private void GameInput_OnDown(object sender, EventArgs e)
     {
-        if (!canDoAction) return;
+        if (!canDoMove) return;
         if (currentGameState == GameState.King) return;
         Room newRoom = rooms.First((x) => x.roomType == currentRoom).bottomRoom;
         if (newRoom != Room.None)
@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
 
     private void GameInput_OnUp(object sender, System.EventArgs e)
     {
-        if (!canDoAction) return;
+        if (!canDoMove) return;
         if (currentGameState == GameState.King) return;
         Room newRoom = rooms.First((x) => x.roomType == currentRoom).upRoom;
         if (newRoom != Room.None)
@@ -154,10 +154,10 @@ public class GameManager : MonoBehaviour
     {
         if (actionsLeft > 0)
         actionsLeft--;
+        actionsUIText.text = actionsLeft.ToString();
         if (actionsLeft == 0)
         {
             canDoAction = false;
-            Invoke(nameof(EndDay), dayEndDelay);
         }
 
     }
@@ -196,6 +196,7 @@ public class GameManager : MonoBehaviour
                 item.HoverObject(false);
                 item.ChangeVisibility(false);
             }
+            canDoMove = false;
             kingGame.StartKingGame();
             ChangeRoom(Room.Throne);
 
@@ -205,6 +206,8 @@ public class GameManager : MonoBehaviour
         if (currentGameState == GameState.Free)
         {
             canDoAction = true;
+            canDoMove = true;
+
             OnDayEnd?.Invoke(this, EventArgs.Empty);
             ChangeRoom(Room.Throne);
             AudioManager.Instance.PlayMusic("PlottingMusic");
@@ -222,21 +225,33 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void UIAnimateObject(CanvasGroup go, float delay = 0f)
+    public void UIAnimateObject(CanvasGroup go, float delay = 0f, bool noMovement = false)
     {
         Vector3 ogPos = go.transform.position;
         Sequence sequence = DOTween.Sequence();
-        sequence.AppendInterval(delay).AppendCallback(() => go.gameObject.SetActive(true)).Append(go.transform.DOMove(go.transform.position + Vector3.up * .3f, .3f)).Append(go.DOFade(1f, .3f)).AppendInterval(.2f).Append(go.DOFade(0f, .15f)).AppendCallback(() =>
+        go.alpha = 0f;
+        if (!noMovement)
         {
-            go.gameObject.SetActive(false);
-            go.transform.position = ogPos;
-        });
+            sequence.AppendInterval(delay).AppendCallback(() => go.gameObject.SetActive(true)).Append(go.transform.DOMove(go.transform.position + Vector3.up * .3f, .3f)).Append(go.DOFade(1f, .3f)).AppendInterval(.2f).Append(go.DOFade(0f, .15f)).AppendCallback(() =>
+            {
+                go.gameObject.SetActive(false);
+                go.transform.position = ogPos;
+            });
+        } else
+        {
+            sequence.AppendInterval(delay).AppendCallback(() => go.gameObject.SetActive(true)).Append(go.DOFade(1f, .3f)).AppendInterval(.2f).Append(go.DOFade(0f, .15f)).AppendCallback(() =>
+            {
+                go.gameObject.SetActive(false);
+            });
+        }
+        
         sequence.Play();
             
     }
 
     public void GiveActions(int actions)
     {
+        canDoAction = true;
         actionsLeft = actions;
         actionsUIText.text = actionsLeft.ToString();
 
