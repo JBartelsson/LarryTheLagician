@@ -56,6 +56,8 @@ public class Cook : RoomObject
             if (GameManager.Instance.Inventory.Any((x) => x.itemtype == Item.DeadlyPotion))
             {
                 Debug.Log("King is killable");
+                potionIcon.gameObject.SetActive(false);
+
                 GameManager.Instance.kingKillable = true;
                 GameManager.Instance.RegisterAction();
             }
