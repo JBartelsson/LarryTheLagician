@@ -21,4 +21,9 @@ public class MenuController : MonoBehaviour
    {
     Application.Quit();
    }
+
+   public void CreditsBack()
+   {
+    SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex -2);
+   }
 }
