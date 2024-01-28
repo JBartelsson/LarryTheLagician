@@ -17,6 +17,7 @@ public class KingGame : MonoBehaviour
     public TextMeshProUGUI actionsText;
     public CanvasGroup lifesGroup;
     public GameObject otherParts;
+    public BossTrigger boss;
     bool active = false;
     bool minigameActive = true;
     [SerializeField] float goodPercent;
@@ -27,24 +28,27 @@ public class KingGame : MonoBehaviour
     [SerializeField] private float speed = 2f;
     float fadeDuration = 0.5f;
 
-    private void Start()
+    public void Start()
     {
+        otherParts.SetActive(false);
         perfectText.gameObject.SetActive(false);
         goodText.gameObject.SetActive(false);
         failureText.gameObject.SetActive(false);
         actionsGroup.gameObject.SetActive(false);
         lifesGroup.gameObject.SetActive(false);
+        minigameObject.DOFade(0f, 0f);
+
         GameManager.Instance.OnPerform += Instance_OnPerform;
         EndKingGame();
         goodImage.fillAmount = goodPercent / 100;
         perfectImage.fillAmount = perfectPercent / 100;
+        boss.Init();
     }
 
     private void Instance_OnPerform(object sender, ActionToListen e)
     {
         if (e == ActionToListen.performed1)
         {
-            if (active)
             HitSkillCheck();
         }
     }
@@ -53,6 +57,7 @@ public class KingGame : MonoBehaviour
 
     private void HitSkillCheck()
     {
+        if (!minigameActive) return;
         minigameActive = false;
         float angle = Vector2.SignedAngle(-rotationObject.transform.up, Vector2.down);
         if (angle < 0) angle += 180;
@@ -96,9 +101,11 @@ public class KingGame : MonoBehaviour
     {
         Debug.Log("End King Game");
         active = false;
+        minigameActive = false;
+
         GameManager.Instance.ChangeGameState(GameState.Free);
         minigameObject.DOFade(0f, fadeDuration);
-        otherParts.SetActive(true);
+        otherParts.SetActive(false);
     }
 
     public void StartKingGame()
@@ -106,7 +113,7 @@ public class KingGame : MonoBehaviour
         active = true;
         minigameActive = true;
         otherParts.SetActive(true);
-
+        rotationObject.transform.Rotate(new Vector3(0, 0, UnityEngine.Random.Range(0, 360)));
         minigameObject.DOFade(1f, fadeDuration);
 
     }
@@ -115,6 +122,7 @@ public class KingGame : MonoBehaviour
     {
         if (minigameActive)
         {
+            Debug.Log(Time.deltaTime * speed);
             rotationObject.transform.Rotate(new Vector3(0, 0, Time.deltaTime * speed));
         }
     }

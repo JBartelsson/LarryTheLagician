@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI lifesUIText;
 
     private Room currentRoom = Room.None;
-    private GameState currentGameState = GameState.King;
+    public GameState currentGameState = GameState.King;
     private int actionsLeft = 0;
     private float dayEndDelay = 2f;
     private int livesLeft = 2;
