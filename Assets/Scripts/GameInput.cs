@@ -32,13 +32,13 @@ public class GameInput : MonoBehaviour
         playerInputActions = new PlayerInput();
         playerInputActions.Player.Enable();
 
-        playerInputActions.Player.Up.performed += Up_performed;
-        playerInputActions.Player.Left.performed += Left_performed;
-        playerInputActions.Player.Right.performed += Right_performed;
-        playerInputActions.Player.Down.performed += Down_performed;
-        playerInputActions.Player.Interact1.performed += Interact1_performed;
-        playerInputActions.Player.Interact2.performed += Interact2_performed;
-        playerInputActions.Player.Interact3.performed += Interact3_performed;
+        playerInputActions.Player.Up.started += Up_performed;
+        playerInputActions.Player.Left.started += Left_performed;
+        playerInputActions.Player.Right.started += Right_performed;
+        playerInputActions.Player.Down.started += Down_performed;
+        playerInputActions.Player.Interact1.started += Interact1_performed;
+        playerInputActions.Player.Interact2.started += Interact2_performed;
+        playerInputActions.Player.Interact3.started += Interact3_performed;
 
 
 

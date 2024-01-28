@@ -18,8 +18,8 @@ public class Cook : RoomObject
         {
             Debug.Log("King is killable");
             GameManager.Instance.kingKillable = true;
+            GameManager.Instance.RegisterAction();
         }
-        GameManager.Instance.RegisterAction();
 
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Cauldron : RoomObject
 {
     [SerializeField] private ItemSO itemToGive;
+    public CanvasGroup ui;
     private void Start()
     {
         GameManager.Instance.OnPerform += Instance_OnPerform;
@@ -17,6 +18,7 @@ public class Cauldron : RoomObject
         AudioManager.Instance.PlaySFX("PotionProduce");
 
         GameManager.Instance.AddItemToInventory(itemToGive);
+        GameManager.Instance.UIAnimateObject(ui);
         GameManager.Instance.RegisterAction();
 
     }

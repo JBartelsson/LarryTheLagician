@@ -1,7 +1,9 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 public enum Room
 {
@@ -30,11 +32,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameInput gameInput;
     [SerializeField] private List<RoomType> rooms;
     [SerializeField] private KingGame kingGame;
+    public TextMeshProUGUI actionsUIText;
+    public TextMeshProUGUI lifesUIText;
 
     private Room currentRoom = Room.None;
     private GameState currentGameState = GameState.King;
     private int actionsLeft = 0;
-    private float dayEndDelay = 0.5f;
+    private float dayEndDelay = 2f;
     private int livesLeft = 2;
 
     //King stats
@@ -47,9 +51,13 @@ public class GameManager : MonoBehaviour
     public List<ItemSO> Inventory { get => inventory; set => inventory = value; }
     public int LivesLeft { get => livesLeft; set {
             livesLeft = value;
-            if (livesLeft == 0)
+            if (livesLeft < 0)
             {
                 ChangeGameState(GameState.Gamover);
+            } else
+            {
+                lifesUIText.text = livesLeft.ToString();
+
             }
         }
     }
@@ -91,7 +99,7 @@ public class GameManager : MonoBehaviour
         gameInput.OnInteract1 += GameInput_OnInteract1;
         gameInput.OnInteract2 += GameInput_OnInteract2;
         gameInput.OnInteract3 += GameInput_OnInteract3;
-
+        GiveActions(0);
         ChangeRoom(Room.Throne);
         ChangeGameState(GameState.King);
         OnInventoryUpdated?.Invoke(this, inventory);
@@ -214,9 +222,24 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void UIAnimateObject(CanvasGroup go, float delay = 0f)
+    {
+        Vector3 ogPos = go.transform.position;
+        Sequence sequence = DOTween.Sequence();
+        sequence.AppendInterval(delay).AppendCallback(() => go.gameObject.SetActive(true)).Append(go.transform.DOMove(go.transform.position + Vector3.up * .3f, .3f)).Append(go.DOFade(1f, .3f)).AppendInterval(.2f).Append(go.DOFade(0f, .15f)).AppendCallback(() =>
+        {
+            go.gameObject.SetActive(false);
+            go.transform.position = ogPos;
+        });
+        sequence.Play();
+            
+    }
+
     public void GiveActions(int actions)
     {
         actionsLeft = actions;
+        actionsUIText.text = actionsLeft.ToString();
+
     }
 
     public void AddItemToInventory(ItemSO item)
