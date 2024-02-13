@@ -192,6 +192,7 @@ public class GameManager : MonoBehaviour
             {
                 AudioManager.Instance.PlaySFX("Drinking");
                 SceneManager.LoadScene("Win");
+                Debug.Log("WIIN");
 
                 return;
             }
